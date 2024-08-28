@@ -14,10 +14,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,17 +69,12 @@ class HikeActivity : ComponentActivity() {
                                     contentDescription = "search"
                                 )
                             },
-                            modifier = if (active) {
-                                Modifier
-//                                    .padding(horizontal = 16.dp)
-                                    .fillMaxWidth()
-                            } else {
-                                Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .fillMaxWidth()
-                            }
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .fillMaxWidth()
                         ) {
-                            LazyColumn {
+                            LazyColumn(
+                            ) {
                                 items(countriesList) { country ->
                                     Text(
                                         text = country,
@@ -104,7 +101,7 @@ class HikeActivity : ComponentActivity() {
                                     },
                                     label = { Text(destination.name) },
                                     selected = false,
-                                    onClick = { 
+                                    onClick = {
                                         navController.navigateSingleTopTo(destination.route)
                                     }
                                 )
@@ -113,7 +110,11 @@ class HikeActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    HikeNavHost(navHostController = navController, modifier = Modifier.padding(innerPadding))
+                    HikeNavHost(
+                        navHostController = navController,
+                        modifier = Modifier.padding(innerPadding)
+                            .padding(top = 8.dp)
+                    )
                     Column(modifier = Modifier.padding(innerPadding)) {
 
                     }
