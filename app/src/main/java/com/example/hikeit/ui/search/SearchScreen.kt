@@ -76,11 +76,11 @@ fun SearchScreen(
         items(items = photos, key = { photo -> photo.title }) { photo ->
             TrailCard(
                 trailInfo = photo,
-                modifier = Modifier
-                    .padding(4.dp)
+                modifier = Modifier.padding(vertical = 8.dp)
             )
         }
     }
+
 }
 
 @Composable
@@ -109,7 +109,8 @@ fun TrailCard(
 
         Text(
             text = trailInfo.title,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(top = 4.dp)
         )
 
         Text(
@@ -118,7 +119,7 @@ fun TrailCard(
         )
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Bottom
         ) {
             Icon(
                 imageVector = Icons.Default.Star,

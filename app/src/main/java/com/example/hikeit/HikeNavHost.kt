@@ -6,6 +6,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.hikeit.data.LocationDetails
 import com.example.hikeit.ui.navigate.NavigateScreen
 import com.example.hikeit.ui.profile.ProfileScreen
 import com.example.hikeit.ui.saved.SavedScreen
@@ -15,6 +16,7 @@ import com.example.hikeit.ui.start.StartScreen
 @Composable
 fun HikeNavHost(
     navHostController: NavHostController,
+    locationDetails: LocationDetails,
     modifier: Modifier = Modifier
 ) {
 
@@ -27,7 +29,7 @@ fun HikeNavHost(
             SearchScreen()
         }
         composable(route = Navigate.route) {
-            NavigateScreen()
+            NavigateScreen(locationDetails)
         }
         composable(route = Start.route) {
             StartScreen()

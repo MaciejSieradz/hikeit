@@ -10,3 +10,5 @@ data class TrailInfo(
     val hours: Int,
     val minutes: Int,
 )
+
+data class LocationDetails(val latitude: Double, val longitude: Double)

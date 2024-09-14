@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(libs.androidx.icons)
     implementation(libs.coil)
+    implementation(libs.osmdroid)
+    implementation(libs.google.navigation)
 
 
     testImplementation(libs.junit)
