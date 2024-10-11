@@ -1,8 +1,10 @@
 package com.example.hikeit.ui.search
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,68 +33,64 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.hikeit.R
 import com.example.hikeit.data.TrailInfo
+import com.example.hikeit.ui.common.LoadingWheel
 import com.example.hikeit.ui.theme.HikeItTheme
 
+@Composable
+fun SearchRoute(
+    viewModel: SearchViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    SearchScreen(uiState)
+}
 
 @Composable
 fun SearchScreen(
-    modifier: Modifier = Modifier
+    uiState: SearchUiState,
+    modifier: Modifier = Modifier,
 ) {
 
-    val photos = listOf(
-        TrailInfo(
-            stringResource(id = R.string.szpiglasowy_wierch),
-            "Szpiglasowy Wierch do Doliny Pięciu Stawów",
-            "Tatry",
-            4.8,
-            "Zaawansowany",
-            24.0,
-            8,
-            14
-        ),
-        TrailInfo(
-            stringResource(id = R.string.tatry_url),
-            "Wołowiec od Zawoi",
-            "Tatry Zachodnie",
-            5.0,
-            "Umiarkowany",
-            12.0,
-            5,
-            3
-        ),
-        TrailInfo(
-            stringResource(id = R.string.rysy),
-            "Rysy od polskiej strony",
-            "Tatry",
-            4.8,
-            "Zaawansowany",
-            18.0,
-            6,
-            40
-        )
-    )
-
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        TrailSearchBar()
-
-        LazyColumn(
-            modifier = modifier
-                .padding(horizontal = 16.dp)
-                .semantics { contentDescription = "Search Screen" }
-        ) {
-            items(items = photos, key = { photo -> photo.title }) { photo ->
-                TrailCard(
-                    trailInfo = photo,
-                    modifier = Modifier.padding(vertical = 8.dp)
+        when (uiState) {
+            SearchUiState.Loading -> {
+                LoadingWheel(
+                    modifier = modifier,
+                    contentDesc = "Loading data"
                 )
+            }
+
+            is SearchUiState.Trails -> {
+
+                TrailSearchBar()
+
+                LazyColumn(
+                    modifier = modifier
+                        .padding(horizontal = 16.dp)
+                        .semantics { contentDescription = "Search Screen" }
+                ) {
+                    items(items = uiState.trails, key = { photo -> photo.title }) { photo ->
+                        TrailCard(
+                            trailInfo = photo,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+                }
             }
         }
     }
@@ -215,9 +213,16 @@ fun TrailSearchBar(modifier: Modifier = Modifier) {
 
 @Composable
 @Preview
-fun SearchScreenPreview() {
+fun SearchScreenPreview(
+    @PreviewParameter(SearchTrailsPreviewParameterProvider::class)
+    trails: List<TrailInfo>
+) {
     HikeItTheme {
-        SearchScreen()
+        SearchScreen(
+            uiState = SearchUiState.Trails(
+                trails = trails
+            )
+        )
     }
 }
 

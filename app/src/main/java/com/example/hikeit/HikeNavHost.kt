@@ -2,6 +2,7 @@ package com.example.hikeit
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,7 +11,9 @@ import com.example.hikeit.data.LocationDetails
 import com.example.hikeit.ui.navigate.NavigateScreen
 import com.example.hikeit.ui.profile.ProfileScreen
 import com.example.hikeit.ui.saved.SavedScreen
+import com.example.hikeit.ui.search.SearchRoute
 import com.example.hikeit.ui.search.SearchScreen
+import com.example.hikeit.ui.search.SearchViewModel
 import com.example.hikeit.ui.start.StartScreen
 
 @Composable
@@ -26,7 +29,8 @@ fun HikeNavHost(
         modifier = modifier
     ) {
         composable(route = Search.route) {
-            SearchScreen()
+            val viewModel = hiltViewModel<SearchViewModel>()
+            SearchRoute(viewModel)
         }
         composable(route = Navigate.route) {
             NavigateScreen(locationDetails)
