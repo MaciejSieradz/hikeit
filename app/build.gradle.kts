@@ -50,6 +50,10 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    defaultConfig {
+        testInstrumentationRunner = "com.example.hikeit.CustomTestRunner"
+    }
 }
 
 dependencies {
@@ -86,6 +90,7 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.navigation.test)
+    androidTestImplementation(libs.hilt.android.testing)
 
 
     debugImplementation(libs.androidx.ui.tooling)
@@ -96,6 +101,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.compose)
     kapt(libs.hilt.compiler)
+    kaptAndroidTest(libs.hilt.compiler)
+    androidTestAnnotationProcessor(libs.hilt.compiler)
 }
 
 java {

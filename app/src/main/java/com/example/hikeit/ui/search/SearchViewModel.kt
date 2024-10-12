@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hikeit.data.TrailInfo
 import com.example.hikeit.data.remote.TrailApi
+import com.example.hikeit.data.repository.TrailDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,10 +14,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    trailApi: TrailApi
+    trailDataRepository: TrailDataRepository
 ) : ViewModel() {
 
-    val uiState: StateFlow<SearchUiState> = trailApi.getAllTrails().map {
+    val uiState: StateFlow<SearchUiState> = trailDataRepository.trailData.map {
         SearchUiState.Trails(it)
     }.stateIn(
         scope = viewModelScope,

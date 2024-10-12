@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.flow
 
 class InMemoryTrailApi : TrailApi {
 
-    override fun getAllTrails(): Flow<List<TrailInfo>> {
+    override suspend fun getAllTrails(): List<TrailInfo> {
+        delay(3000)
         val trails = listOf(
             TrailInfo(
                 "https://tatromaniak.pl/wp-content/uploads/2015/07/szpiglasowy_rafal_ociepka_360_kopia2.jpg",
@@ -40,9 +41,6 @@ class InMemoryTrailApi : TrailApi {
                 40
             )
         )
-        return flow {
-            delay(5000)
-            emit(trails)
-        }
+        return trails
     }
 }

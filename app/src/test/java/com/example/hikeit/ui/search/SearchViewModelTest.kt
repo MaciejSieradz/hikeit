@@ -1,11 +1,17 @@
 package com.example.hikeit.ui.search
 
 import com.example.hikeit.data.TrailInfo
-import com.example.hikeit.data.remote.TrailApi
+import com.example.hikeit.data.repository.TrailDataRepository
 import com.example.hikeit.util.MainDispatcherRule
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -19,14 +25,14 @@ class SearchViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val trailApi = TestTrailApi()
+    private val trailDataRepository = TestTrailDataRepository()
 
     private lateinit var viewModel: SearchViewModel
 
     @Before
     fun setup() {
         viewModel = SearchViewModel(
-            trailApi
+            trailDataRepository = trailDataRepository
         )
     }
 
@@ -34,45 +40,68 @@ class SearchViewModelTest {
     fun uiState_whenInitialized_thenShowLoading() = runTest {
         assertEquals(SearchUiState.Loading, viewModel.uiState.value)
     }
-}
 
-class TestTrailApi : TrailApi {
-    override fun getAllTrails(): Flow<List<TrailInfo>> {
-         val trails = listOf(
-            TrailInfo(
-                "https://tatromaniak.pl/wp-content/uploads/2015/07/szpiglasowy_rafal_ociepka_360_kopia2.jpg",
-                "Szpiglasowy Wierch do Doliny Pięciu Stawów",
-                "Tatry",
-                4.8,
-                "Zaawansowany",
-                24.0,
-                8,
-                14
-            ),
-            TrailInfo(
-                "https://www.e-wczasy.pl/blog/wp-content/uploads/2020/10/szlak-tatry.jpg",
-                "Wołowiec od Zawoi",
-                "Tatry Zachodnie",
-                5.0,
-                "Umiarkowany",
-                12.0,
-                5,
-                3
-            ),
-            TrailInfo(
-                "https://www.e-horyzont.pl/media/mageplaza/blog/post/r/y/rysy-01.jpg",
-                "Rysy od polskiej strony",
-                "Tatry",
-                4.8,
-                "Zaawansowany",
-                18.0,
-                6,
-                40
-            )
-        )
-        return flow {
-            emit(trails)
-        }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun uiState_whenTrailsAreLoading_thenShowLoading() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+
+        assertEquals(SearchUiState.Loading, viewModel.uiState.value)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun uiState_whenTrailLoaded_thenShowTrails() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher()) { viewModel.uiState.collect() }
+
+        trailDataRepository.setTrailData(trails)
+
+        assertEquals(
+            SearchUiState.Trails(trails = trails),
+            viewModel.uiState.value
+        )
+    }
 }
+
+class TestTrailDataRepository : TrailDataRepository {
+    private val _trailData = MutableSharedFlow<List<TrailInfo>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
+    override val trailData: Flow<List<TrailInfo>> = _trailData.filterNotNull()
+
+    fun setTrailData(trailData: List<TrailInfo>) {
+        _trailData.tryEmit(trailData)
+    }
+}
+
+val trails = listOf(
+    TrailInfo(
+        "https://tatromaniak.pl/wp-content/uploads/2015/07/szpiglasowy_rafal_ociepka_360_kopia2.jpg",
+        "Szpiglasowy Wierch do Doliny Pięciu Stawów",
+        "Tatry",
+        4.8,
+        "Zaawansowany",
+        24.0,
+        8,
+        14
+    ),
+    TrailInfo(
+        "https://www.e-wczasy.pl/blog/wp-content/uploads/2020/10/szlak-tatry.jpg",
+        "Wołowiec od Zawoi",
+        "Tatry Zachodnie",
+        5.0,
+        "Umiarkowany",
+        12.0,
+        5,
+        3
+    ),
+    TrailInfo(
+        "https://www.e-horyzont.pl/media/mageplaza/blog/post/r/y/rysy-01.jpg",
+        "Rysy od polskiej strony",
+        "Tatry",
+        4.8,
+        "Zaawansowany",
+        18.0,
+        6,
+        40
+    )
+)
