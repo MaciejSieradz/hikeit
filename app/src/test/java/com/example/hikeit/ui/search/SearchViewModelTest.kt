@@ -1,6 +1,7 @@
 package com.example.hikeit.ui.search
 
 import com.example.hikeit.data.TrailInfo
+import com.example.hikeit.data.model.TrailDetails
 import com.example.hikeit.data.repository.TrailDataRepository
 import com.example.hikeit.util.MainDispatcherRule
 import junit.framework.TestCase.assertEquals
@@ -70,6 +71,10 @@ class TestTrailDataRepository : TrailDataRepository {
 
     fun setTrailData(trailData: List<TrailInfo>) {
         _trailData.tryEmit(trailData)
+    }
+
+    override suspend fun getTrailDetails(trialId: String): TrailDetails {
+        return TrailDetails()
     }
 }
 

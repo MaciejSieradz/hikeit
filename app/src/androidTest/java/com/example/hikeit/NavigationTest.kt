@@ -1,7 +1,11 @@
 package com.example.hikeit
 
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onParent
+import androidx.compose.ui.test.performClick
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -22,10 +26,20 @@ class NavigationTest {
 
     @Test
     fun firstScreen_isSearchScreen() {
-        composeTestRule.apply {
-            onNodeWithTag("Search Screen").assertExists()
-        }
+
+        composeTestRule
+            .onNodeWithContentDescription("Search Screen")
+            .assertIsDisplayed()
     }
 
+    @Test
+    fun searchScreen_clickOnTrail_isTrailScreen() {
+        composeTestRule
+            .onNodeWithText("Wołowiec od Zawoi")
+            .onParent()
+            .performClick()
 
+        composeTestRule.onNodeWithContentDescription("Trail Screen")
+            .assertIsDisplayed()
+    }
 }

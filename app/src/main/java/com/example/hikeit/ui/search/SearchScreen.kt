@@ -1,5 +1,6 @@
 package com.example.hikeit.ui.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,8 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,10 +37,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.hikeit.R
 import com.example.hikeit.data.TrailInfo
 import com.example.hikeit.ui.common.LoadingWheel
 import com.example.hikeit.ui.theme.HikeItTheme
@@ -49,15 +46,17 @@ import com.example.hikeit.ui.theme.HikeItTheme
 @Composable
 fun SearchRoute(
     viewModel: SearchViewModel = hiltViewModel(),
+    onTrailClick: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    SearchScreen(uiState)
+    SearchScreen(uiState, onTrailClick)
 }
 
 @Composable
 fun SearchScreen(
     uiState: SearchUiState,
+    navigateToTrail: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -65,7 +64,7 @@ fun SearchScreen(
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .testTag("Search Screen"),
+            .semantics { contentDescription = "Search Screen" },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -84,12 +83,14 @@ fun SearchScreen(
                 LazyColumn(
                     modifier = modifier
                         .padding(horizontal = 16.dp)
-                        .semantics { contentDescription = "Search Screen" }
                 ) {
                     items(items = uiState.trails, key = { photo -> photo.title }) { photo ->
                         TrailCard(
                             trailInfo = photo,
-                            modifier = Modifier.padding(vertical = 8.dp)
+                            modifier =
+                                Modifier.padding(vertical = 8.dp)
+                                    .semantics { contentDescription = "TrailCard" },
+                            navigateToTrail
                         )
                     }
                 }
@@ -101,7 +102,8 @@ fun SearchScreen(
 @Composable
 fun TrailCard(
     trailInfo: TrailInfo,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToTrail: (String) -> Unit
 ) {
 
     Column(modifier = modifier) {
@@ -109,6 +111,7 @@ fun TrailCard(
             Modifier
                 .aspectRatio(1.5f)
                 .fillMaxWidth()
+                .clickable(onClick = { navigateToTrail("1") })
         ) {
 
             AsyncImage(
@@ -222,8 +225,9 @@ fun SearchScreenPreview(
     HikeItTheme {
         SearchScreen(
             uiState = SearchUiState.Trails(
-                trails = trails
-            )
+                trails = trails,
+            ),
+            navigateToTrail = {}
         )
     }
 }

@@ -7,6 +7,8 @@ import androidx.compose.material.icons.filled.Hiking
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 interface HikeDestination {
     val icon: ImageVector
@@ -18,6 +20,16 @@ object Search : HikeDestination {
     override val icon = Icons.Filled.Search
     override val route = "search"
     override val name = "Szukaj"
+}
+
+object TrailInfo : HikeDestination {
+    override val icon = Icons.Filled.Search
+    override val route = "trail"
+    override val name = "Trail Info"
+    const val trailId = "trailId"
+    val arguments = listOf(
+        navArgument(trailId) { type = NavType.StringType}
+    )
 }
 
 object Navigate : HikeDestination {
