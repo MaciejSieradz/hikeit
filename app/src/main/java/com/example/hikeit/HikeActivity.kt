@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,17 +22,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.hikeit.data.LocationDetails
-import com.example.hikeit.ui.search.SearchViewModel
 import com.example.hikeit.ui.theme.HikeItTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import dagger.hilt.android.AndroidEntryPoint
-import org.osmdroid.config.Configuration
+import org.koin.compose.KoinContext
 
-@AndroidEntryPoint
 class HikeActivity : ComponentActivity() {
 
     private var locationCallback: LocationCallback? = null
@@ -45,57 +41,56 @@ class HikeActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-
             HikeItTheme {
-                val navController = rememberNavController()
+                KoinContext {
+                    val navController = rememberNavController()
 
-                Scaffold(
-                    bottomBar = {
-                        NavigationBar {
-                            hikeTabRowScreens.forEach { destination ->
-                                NavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            destination.icon,
-                                            contentDescription = destination.route
-                                        )
-                                    },
-                                    label = { Text(destination.name) },
-                                    selected = false,
-                                    onClick = {
-                                        navController.navigateSingleTopTo(destination.route)
-                                    }
-                                )
+                    Scaffold(
+                        bottomBar = {
+                            NavigationBar {
+                                hikeTabRowScreens.forEach { destination ->
+                                    NavigationBarItem(
+                                        icon = {
+                                            Icon(
+                                                destination.icon,
+                                                contentDescription = destination.route
+                                            )
+                                        },
+                                        label = { Text(destination.name) },
+                                        selected = false,
+                                        onClick = {
+                                            navController.navigateSingleTopTo(destination.route)
+                                        }
+                                    )
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+                    ) { innerPadding ->
+
+                        var currentLocation by remember {
+                            mutableStateOf(LocationDetails(49.toDouble(), 51.toDouble()))
+                        }
+
+                        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+                        locationCallback = object : LocationCallback() {
+                            override fun onLocationResult(p0: LocationResult) {
+                                for (lo in p0.locations) {
+                                    currentLocation = LocationDetails(lo.latitude, lo.longitude)
+                                }
                             }
                         }
-                    },
-                    modifier = Modifier.fillMaxSize(),
-                    contentWindowInsets = WindowInsets(0 , 0, 0, 0)
-                ) { innerPadding ->
 
-                    var currentLocation by remember {
-                        mutableStateOf(LocationDetails(49.toDouble(), 51.toDouble()))
+                        startLocationUpdates()
+
+                        HikeNavHost(
+                            navHostController = navController,
+                            currentLocation,
+                            modifier = Modifier.padding(innerPadding),
+                        )
                     }
-
-                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-                    locationCallback = object : LocationCallback() {
-                        override fun onLocationResult(p0: LocationResult) {
-                            for (lo in p0.locations) {
-                                currentLocation = LocationDetails(lo.latitude, lo.longitude)
-                            }
-                        }
-                    }
-
-                    startLocationUpdates()
-
-                    HikeNavHost(
-                        navHostController = navController,
-                        currentLocation,
-                        modifier = Modifier.padding(innerPadding),
-                    )
                 }
-
-                Configuration.getInstance().userAgentValue = "hikr"
             }
         }
     }
