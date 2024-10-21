@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.hikeit.trails.presentation.models.TrailUi
 import com.example.hikeit.trails.presentation.trail_list.components.TrailCard
-import com.example.hikeit.ui.common.LoadingWheel
+import com.example.hikeit.core.presentation.util.LoadingWheel
 import com.example.hikeit.ui.theme.HikeItTheme
 import org.koin.androidx.compose.koinViewModel
 

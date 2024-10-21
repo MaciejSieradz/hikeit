@@ -37,7 +37,7 @@ fun TrailCard(
             Modifier
                 .aspectRatio(1.5f)
                 .fillMaxWidth()
-                .clickable(onClick = { navigateToTrail("1") })
+                .clickable(onClick = { navigateToTrail(trailUi.id) })
         ) {
 
             AsyncImage(

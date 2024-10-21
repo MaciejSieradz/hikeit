@@ -1,4 +1,4 @@
-package com.example.hikeit.ui.common
+package com.example.hikeit.core.presentation.util
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.Animatable

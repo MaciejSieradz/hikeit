@@ -14,8 +14,3 @@ data class TrailDto(
     val estimatedHikingTime: EstimatedHikingTimeDto
 )
 
-@Serializable
-data class EstimatedHikingTimeDto(
-    val hours: Int,
-    val minutes: Int
-)

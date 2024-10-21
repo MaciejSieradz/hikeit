@@ -7,7 +7,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.hikeit.data.LocationDetails
 import com.example.hikeit.trails.presentation.trail_detail.TrailDetailRoute
 import com.example.hikeit.trails.presentation.trail_detail.TrailViewModel
 import com.example.hikeit.trails.presentation.trail_list.TrailListRoute
@@ -22,7 +21,6 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun HikeNavHost(
     navHostController: NavHostController = rememberNavController(),
-    locationDetails: LocationDetails,
     modifier: Modifier = Modifier
 ) {
 
@@ -51,7 +49,7 @@ fun HikeNavHost(
             TrailDetailRoute(viewModel)
         }
         composable(route = Navigate.route) {
-            NavigateScreen(locationDetails)
+            NavigateScreen()
         }
         composable(route = Start.route) {
             StartScreen()

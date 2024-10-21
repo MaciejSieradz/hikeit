@@ -3,4 +3,8 @@
     <string name="tatry_url">https://www.e-wczasy.pl/blog/wp-content/uploads/2020/10/szlak-tatry.jpg</string>
     <string name="szpiglasowy_wierch">https://tatromaniak.pl/wp-content/uploads/2015/07/szpiglasowy_rafal_ociepka_360_kopia2.jpg</string>
     <string name="rysy">https://www.e-horyzont.pl/media/mageplaza/blog/post/r/y/rysy-01.jpg</string>
+    <string name="trail_distance">Długość szlaku</string>
+    <string name="trail_elevation">Przewyższenie</string>
+    <string name="trail_time">Średni czas przejścia</string>
+    <string name="trail_max_height">Max. wysokość</string>
 </resources>

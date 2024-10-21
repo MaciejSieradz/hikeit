@@ -10,8 +10,3 @@ data class Trail(
     val distance: Double,
     val estimatedHikingTime: EstimatedHikingTime
 )
-
-data class EstimatedHikingTime(
-    val hours: Int,
-    val minutes: Int
-)
