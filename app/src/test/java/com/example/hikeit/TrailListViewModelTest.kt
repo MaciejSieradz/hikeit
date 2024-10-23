@@ -9,6 +9,10 @@ import com.example.hikeit.trails.presentation.models.toTrailUi
 import com.example.hikeit.trails.presentation.trail_list.TrailListViewModel
 import com.example.hikeit.util.MainDispatcherRule
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -33,6 +37,7 @@ class TrailListViewModelTest {
         viewModel = TrailListViewModel(trailDataRepository)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun uiState_whenInitialized_thenShowTrails() = runTest {
 
@@ -40,8 +45,11 @@ class TrailListViewModelTest {
             Result.Success(trails)
         )
 
-        assertEquals(true, viewModel.state.value.isLoading)
-        println(viewModel.state.value)
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.state.collect()
+        }
+
+        assertEquals(false, viewModel.state.value.isLoading)
         assertEquals(trails.map { it.toTrailUi() }, viewModel.state.value.trails)
     }
 
