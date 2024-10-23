@@ -1,5 +1,7 @@
 package com.example.hikeit.trails.presentation.models
 
+import com.example.hikeit.trails.domain.Comment
+
 data class UserCommentUi(
     val userAvatarUrl: String,
     val username: String,
@@ -7,3 +9,13 @@ data class UserCommentUi(
     val commentDate: String,
     val comment: String
 )
+
+fun Comment.toUserCommentUi() : UserCommentUi {
+    return UserCommentUi(
+        userAvatarUrl = userAvatarUrl,
+        username = username,
+        rating = rating,
+        commentDate = commentDate,
+        comment = comment
+    )
+}

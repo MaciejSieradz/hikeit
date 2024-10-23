@@ -16,15 +16,18 @@ google-navigation = "21.3.0"
 ktor = "2.3.12"
 coroutines = "1.9.0"
 
-lifecycleViewModel = "2.8.6"
-
 robolectric = "4.12.2"
 
 google-maps = "6.1.2"
 
+mockito = "5.14.2"
+mockito-kotlin = "3.2.0"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockito = {group = "org.mockito", name = "mockito-core", version.ref = "mockito"}
+mockito-kotlin = {group = "org.mockito.kotlin", name ="mockito-kotlin", version.ref = "mockito-kotlin"}
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
