@@ -1,17 +1,26 @@
 package com.example.hikeit.trails.presentation.trail_list
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -27,6 +36,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.hikeit.trails.presentation.models.TrailUi
 import com.example.hikeit.trails.presentation.trail_list.components.TrailCard
@@ -49,6 +59,7 @@ fun TrailListScreen(
     navigateToTrail: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -65,19 +76,37 @@ fun TrailListScreen(
         } else {
             TrailSearchBar()
 
-            LazyColumn(
-                modifier = modifier
-                    .padding(horizontal = 16.dp)
+            Box(
+                modifier = Modifier.fillMaxSize()
             ) {
-                items(items = uiState.trails, key = { photo -> photo.title }) { photo ->
-                    TrailCard(
-                        trailUi = photo,
-                        modifier =
-                        Modifier
-                            .padding(vertical = 8.dp)
-                            .semantics { contentDescription = "TrailCard" },
-                        navigateToTrail
+                LargeFloatingActionButton(
+                    onClick = {},
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
+                        .zIndex(2f)
+                ) {
+                    Image(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add new trail",
+                        modifier = Modifier.size(28.dp)
                     )
+                }
+
+                LazyColumn(
+                    modifier = modifier
+                        .padding(horizontal = 16.dp)
+                ) {
+                    items(items = uiState.trails, key = { photo -> photo.title }) { photo ->
+                        TrailCard(
+                            trailUi = photo,
+                            modifier =
+                            Modifier
+                                .padding(vertical = 8.dp)
+                                .semantics { contentDescription = "TrailCard" },
+                            navigateToTrail
+                        )
+                    }
                 }
             }
         }

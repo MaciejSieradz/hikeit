@@ -7,4 +7,9 @@
     <string name="trail_elevation">Przewyższenie</string>
     <string name="trail_time">Średni czas przejścia</string>
     <string name="trail_max_height">Max. wysokość</string>
+    <string name="error_request_timeout">Przekroczono czas oczekiwania na odpowiedź.</string>
+    <string name="error_too_many_request">Zbyt wiele żądań!</string>
+    <string name="error_no_internet">Brak internetu. Upewnij się, że tryb samolotowy nie jest włączony.</string>
+    <string name="error_something_went_wrong">Upss… Coś poszło nie tak!</string>
+    <string name="error_serialization">Wystapił problem przy przetwarzaniu danych!</string>
 </resources>

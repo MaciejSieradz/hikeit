@@ -1,10 +1,12 @@
-package com.example.hikeit
+package com.example.hikeit.trails.presentation.viewmodels
 
+import com.example.hikeit.core.domain.util.NetworkError
 import com.example.hikeit.core.domain.util.Result
 import com.example.hikeit.trails.data.mappers.toTrail
 import com.example.hikeit.trails.data.networking.dto.EstimatedHikingTimeDto
 import com.example.hikeit.trails.data.networking.dto.TrailDto
 import com.example.hikeit.trails.domain.TrailRepository
+import com.example.hikeit.trails.presentation.models.TrailUi
 import com.example.hikeit.trails.presentation.models.toTrailUi
 import com.example.hikeit.trails.presentation.trail_list.TrailListViewModel
 import com.example.hikeit.util.MainDispatcherRule
@@ -53,6 +55,20 @@ class TrailListViewModelTest {
         assertEquals(trails.map { it.toTrailUi() }, viewModel.state.value.trails)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun uiState_whenNoInternet_showError() = runTest {
+        Mockito.`when`(trailDataRepository.getTrails()).thenReturn(
+            Result.Error(NetworkError.NO_INTERNET)
+        )
+
+        backgroundScope.launch(UnconfinedTestDispatcher((testScheduler))) {
+            viewModel.state.collect()
+        }
+
+        assertEquals(false, viewModel.state.value.isLoading)
+        assertEquals(emptyList<TrailUi>(), viewModel.state.value.trails)
+    }
 }
 
 val trails = listOf(

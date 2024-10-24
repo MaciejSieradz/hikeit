@@ -31,7 +31,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TrailDetailRoute(
-    viewModel: TrailViewModel = koinViewModel<TrailViewModel>(),
+    viewModel: TrailDetailViewmodel = koinViewModel<TrailDetailViewmodel>(),
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()

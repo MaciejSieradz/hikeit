@@ -1,8 +1,7 @@
 package com.example.hikeit.trails.presentation.models
 
-import android.icu.text.NumberFormat
+import com.example.hikeit.trails.data.mappers.getPolishNumberFormatter
 import com.example.hikeit.trails.domain.TrailDetails
-import java.util.Locale
 
 data class TrailDetailUi(
     val trailPhotoUrl: String,
@@ -18,10 +17,7 @@ data class TrailDetailUi(
 
 fun TrailDetails.toTrailDetailsUi() : TrailDetailUi {
 
-    val formatter = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
-        maximumFractionDigits = 1
-        minimumFractionDigits = 1
-    }
+    val formatter = getPolishNumberFormatter()
 
     return TrailDetailUi(
         trailPhotoUrl = trailPhotoUrl,
@@ -31,7 +27,7 @@ fun TrailDetails.toTrailDetailsUi() : TrailDetailUi {
         distance = "${formatter.format(distance)} km",
         elevationGain = "$elevationGain m",
         maxHeight = "$maxHeight m",
-        estimatedHikingTime = "${estimatedHikingTime.hours} km ${estimatedHikingTime.minutes} min",
+        estimatedHikingTime = "${estimatedHikingTime.hours} godz. ${estimatedHikingTime.minutes} min.",
         description = description
     )
 }

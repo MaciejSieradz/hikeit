@@ -7,14 +7,16 @@ import com.example.hikeit.core.domain.util.onSuccess
 import com.example.hikeit.trails.domain.TrailRepository
 import com.example.hikeit.trails.presentation.models.toTrailDetailsUi
 import com.example.hikeit.trails.presentation.models.toUserCommentUi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class TrailViewModel(
+class TrailDetailViewmodel(
     private val trailId: String,
     private val trailRepository: TrailRepository
 ) : ViewModel() {
@@ -27,6 +29,9 @@ class TrailViewModel(
             SharingStarted.WhileSubscribed(5000L),
             TrailDetailState()
         )
+
+    private val _events = Channel<TrailDetailEvent>()
+    val events = _events.receiveAsFlow()
 
     private fun loadTrailDetails(trailId: String) {
         viewModelScope.launch {
@@ -46,8 +51,13 @@ class TrailViewModel(
                         )
                     }
                 }
-                .onError {
-
+                .onError { error ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false
+                        )
+                    }
+                    _events.send(TrailDetailEvent.Error(error))
                 }
         }
     }

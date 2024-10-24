@@ -1,14 +1,20 @@
 package com.example.hikeit
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.hikeit.core.presentation.util.ObserveAsEvents
+import com.example.hikeit.core.presentation.util.toString
+import com.example.hikeit.trails.presentation.trail_detail.TrailDetailEvent
 import com.example.hikeit.trails.presentation.trail_detail.TrailDetailRoute
-import com.example.hikeit.trails.presentation.trail_detail.TrailViewModel
+import com.example.hikeit.trails.presentation.trail_detail.TrailDetailViewmodel
+import com.example.hikeit.trails.presentation.trail_list.TrailListEvent
 import com.example.hikeit.trails.presentation.trail_list.TrailListRoute
 import com.example.hikeit.trails.presentation.trail_list.TrailListViewModel
 import com.example.hikeit.ui.navigate.NavigateScreen
@@ -29,10 +35,23 @@ fun HikeNavHost(
         startDestination = Search.route,
         modifier = modifier
     ) {
+
         composable(
             route = Search.route
         ) {
             val viewModel = koinViewModel<TrailListViewModel>()
+            val context = LocalContext.current
+            ObserveAsEvents(events = viewModel.events) { event ->
+                when(event) {
+                    is TrailListEvent.Error -> {
+                        Toast.makeText(
+                            context,
+                            event.error.toString(context),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
             TrailListRoute(viewModel) { trailId ->
                 navHostController.navigateToTrail(trailId)
             }
@@ -43,8 +62,21 @@ fun HikeNavHost(
         ) { navBackStackEntry ->
             val trailId =
                 navBackStackEntry.arguments?.getString(TrailInfo.trailId)
-            val viewModel = koinViewModel<TrailViewModel> {
+            val viewModel = koinViewModel<TrailDetailViewmodel> {
                 parametersOf(trailId)
+            }
+            val context = LocalContext.current
+            ObserveAsEvents(events = viewModel.events) { event ->
+                when(event) {
+
+                    is TrailDetailEvent.Error -> {
+                        Toast.makeText(
+                            context,
+                            event.error.toString(context),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
             }
             TrailDetailRoute(viewModel)
         }

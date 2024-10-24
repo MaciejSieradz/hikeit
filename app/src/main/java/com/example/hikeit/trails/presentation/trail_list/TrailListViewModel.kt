@@ -6,9 +6,11 @@ import com.example.hikeit.core.domain.util.onError
 import com.example.hikeit.core.domain.util.onSuccess
 import com.example.hikeit.trails.domain.TrailRepository
 import com.example.hikeit.trails.presentation.models.toTrailUi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,6 +28,8 @@ class TrailListViewModel(
             TrailListState()
         )
 
+    private val _events = Channel<TrailListEvent>()
+    val events = _events.receiveAsFlow()
 
     private fun loadTrails() {
         viewModelScope.launch {
@@ -44,8 +48,9 @@ class TrailListViewModel(
                         )
                     }
                 }
-                .onError {
-
+                .onError { error ->
+                    _state.update { it.copy(isLoading = false) }
+                    _events.send(TrailListEvent.Error(error = error))
                 }
         }
     }
