@@ -11,6 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.hikeit.core.presentation.util.ObserveAsEvents
 import com.example.hikeit.core.presentation.util.toString
+import com.example.hikeit.trails.presentation.create_trail.CreateTrailRoute
+import com.example.hikeit.trails.presentation.create_trail.CreateTrailViewModel
 import com.example.hikeit.trails.presentation.trail_detail.TrailDetailEvent
 import com.example.hikeit.trails.presentation.trail_detail.TrailDetailRoute
 import com.example.hikeit.trails.presentation.trail_detail.TrailDetailViewmodel
@@ -42,7 +44,7 @@ fun HikeNavHost(
             val viewModel = koinViewModel<TrailListViewModel>()
             val context = LocalContext.current
             ObserveAsEvents(events = viewModel.events) { event ->
-                when(event) {
+                when (event) {
                     is TrailListEvent.Error -> {
                         Toast.makeText(
                             context,
@@ -52,9 +54,24 @@ fun HikeNavHost(
                     }
                 }
             }
-            TrailListRoute(viewModel) { trailId ->
-                navHostController.navigateToTrail(trailId)
-            }
+            TrailListRoute(
+                viewModel = viewModel,
+                onTrailClick = { trailId ->
+                    navHostController.navigateToTrail(trailId)
+                },
+                onFabClick = {
+                    navHostController.navigateSingleTopTo(CreateTrail.route)
+                }
+            )
+        }
+        composable(
+            route = CreateTrail.route
+        ) {
+            val viewModel = koinViewModel<CreateTrailViewModel>()
+            CreateTrailRoute(
+                viewModel,
+                viewModel::onAction
+            )
         }
         composable(
             route = "${TrailInfo.route}/{${TrailInfo.trailId}}",
@@ -67,7 +84,7 @@ fun HikeNavHost(
             }
             val context = LocalContext.current
             ObserveAsEvents(events = viewModel.events) { event ->
-                when(event) {
+                when (event) {
 
                     is TrailDetailEvent.Error -> {
                         Toast.makeText(

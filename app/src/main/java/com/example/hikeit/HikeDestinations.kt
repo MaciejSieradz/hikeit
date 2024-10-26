@@ -2,6 +2,7 @@ package com.example.hikeit
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Hiking
 import androidx.compose.material.icons.filled.LocationOn
@@ -20,6 +21,12 @@ object Search : HikeDestination {
     override val icon = Icons.Filled.Search
     override val route = "search"
     override val name = "Szukaj"
+}
+
+object CreateTrail: HikeDestination {
+    override val icon = Icons.Filled.Add
+    override val route = "add_trail"
+    override val name = "Dodaj szlak"
 }
 
 object TrailInfo : HikeDestination {

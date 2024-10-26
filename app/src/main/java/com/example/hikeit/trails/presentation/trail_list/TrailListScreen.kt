@@ -44,16 +44,18 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun TrailListRoute(
     viewModel: TrailListViewModel = koinViewModel<TrailListViewModel>(),
-    onTrailClick: (String) -> Unit
+    onTrailClick: (String) -> Unit,
+    onFabClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    TrailListScreen(state, onTrailClick)
+    TrailListScreen(state, onTrailClick, onFabClick)
 }
 
 @Composable
 fun TrailListScreen(
     uiState: TrailListState,
     navigateToTrail: (String) -> Unit,
+    onFabClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -77,7 +79,7 @@ fun TrailListScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 LargeFloatingActionButton(
-                    onClick = {},
+                    onClick = onFabClick,
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(16.dp)
@@ -182,6 +184,7 @@ private fun TrailListScreenPreview() {
                 trails = previewTrailUis
             ),
             navigateToTrail = {},
+            onFabClick = {},
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
         )

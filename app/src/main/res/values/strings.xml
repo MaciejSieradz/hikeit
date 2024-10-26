@@ -12,4 +12,12 @@
     <string name="error_no_internet">Brak internetu. Upewnij się, że tryb samolotowy nie jest włączony.</string>
     <string name="error_something_went_wrong">Upss… Coś poszło nie tak!</string>
     <string name="error_serialization">Wystapił problem przy przetwarzaniu danych!</string>
+    <string name="insert_photos">Wstaw zdjęcia z trasy!</string>
+    <string name="required">To pole jest wymagane.</string>
+    <string name="trail_form_title">Tytuł wycieczki</string>
+    <string name="trail_form_difficulty">Trudność wycieczki</string>
+    <string name="trail_form_empty_time">Podaj szacowany czas</string>
+    <string name="trail_form_time">Szacowany czas wycieczki</string>
+    <string name="trail_form_description">Opis wycieczki</string>
+    <string name="create_new_trail">Dodaj nową wycieczkę</string>
 </resources>

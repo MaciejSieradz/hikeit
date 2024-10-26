@@ -4,6 +4,7 @@ import com.example.hikeit.trails.data.TrailRepositoryImpl
 import com.example.hikeit.trails.data.networking.InMemoryTrailDataSource
 import com.example.hikeit.trails.data.networking.TrailDataSource
 import com.example.hikeit.trails.domain.TrailRepository
+import com.example.hikeit.trails.presentation.create_trail.CreateTrailViewModel
 import com.example.hikeit.trails.presentation.trail_list.TrailListViewModel
 import com.example.hikeit.trails.presentation.trail_detail.TrailDetailViewmodel
 import org.koin.core.module.dsl.singleOf
@@ -18,5 +19,6 @@ val appModule = module {
 
     viewModelOf(::TrailDetailViewmodel)
     viewModelOf(::TrailListViewModel)
+    viewModelOf(::CreateTrailViewModel)
 }
 
