@@ -61,7 +61,8 @@ fun CreateTrailForm(
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
 
         ClickableTextField(
-            value = createTrailState.estimatedTime,
+            value = createTrailState.estimatedTime?.let { "${it.hours} godz. ${it.minutes} min." }
+                ?: "",
             isError = createTrailState.estimatedTimeError,
             label = R.string.trail_form_time,
             supportingText = R.string.required,

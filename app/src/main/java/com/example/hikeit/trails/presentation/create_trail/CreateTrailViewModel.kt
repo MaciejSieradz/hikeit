@@ -2,11 +2,16 @@ package com.example.hikeit.trails.presentation.create_trail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hikeit.core.domain.util.onSuccess
+import com.example.hikeit.trails.domain.TrailRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class CreateTrailViewModel() : ViewModel() {
+class CreateTrailViewModel(
+    private val trailRepository: TrailRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(CreateTrailState())
     val state = _state
@@ -18,6 +23,16 @@ class CreateTrailViewModel() : ViewModel() {
 
     fun onAction(action: CreateTrailAction) {
         when (action) {
+
+            is CreateTrailAction.CreateTrail -> {
+                viewModelScope.launch {
+                    trailRepository.saveTrail(_state.value.createTrailForm())
+                        .onSuccess {
+
+                        }
+                }
+            }
+
             is CreateTrailAction.TitleChanged -> {
                 _state.value = _state.value.copy(
                     title = action.title
@@ -42,6 +57,23 @@ class CreateTrailViewModel() : ViewModel() {
                 )
             }
 
+            is CreateTrailAction.GpxFileSelected -> {
+                _state.value = _state.value.copy(
+                    gpxUri = action.gpxUri
+                )
+            }
+
+            is CreateTrailAction.PhotosSelected -> {
+                _state.value = _state.value.copy(
+                    photosUri = action.photosUri
+                )
+            }
+
+            is CreateTrailAction.RemovePhoto -> {
+                _state.value = _state.value.copy(
+                    photosUri = _state.value.photosUri.minus(action.photoUri)
+                )
+            }
 
             is CreateTrailAction.ValidateTitle -> {
                 _state.value = _state.value.copy(
@@ -63,7 +95,7 @@ class CreateTrailViewModel() : ViewModel() {
 
             is CreateTrailAction.ValidateEstimatedTime -> {
                 _state.value = _state.value.copy(
-                    estimatedTimeError = action.time.isBlank()
+                    estimatedTimeError = action.time.hours == 0 && action.time.minutes == 0
                 )
             }
         }

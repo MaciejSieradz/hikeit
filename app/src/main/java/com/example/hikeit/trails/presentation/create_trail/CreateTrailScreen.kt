@@ -1,7 +1,6 @@
 package com.example.hikeit.trails.presentation.create_trail
 
-import android.icu.util.Calendar
-import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,16 +20,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.hikeit.R
+import com.example.hikeit.trails.domain.EstimatedHikingTime
 import com.example.hikeit.trails.presentation.create_trail.components.AddGpxFile
 import com.example.hikeit.trails.presentation.create_trail.components.CreateTrailForm
 import com.example.hikeit.trails.presentation.create_trail.components.ImagesRow
@@ -53,19 +51,11 @@ fun CreateTrailScreen(
     onAction: (CreateTrailAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val currentTime = Calendar.getInstance()
-
-    var gpx by rememberSaveable {
-        mutableStateOf<Uri?>(null)
-    }
-
-    var photos by rememberSaveable {
-        mutableStateOf<List<Uri?>>(emptyList())
-    }
+    val context = LocalContext.current
 
     val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = currentTime.get(Calendar.MINUTE),
+        initialHour = 0,
+        initialMinute = 0,
         is24Hour = true,
     )
 
@@ -98,13 +88,32 @@ fun CreateTrailScreen(
             },
             onDescriptionChange = { onAction(CreateTrailAction.DescriptionChanged(it)) },
             onTimeSelected = {
-                val time = "${timePickerState.hour} godz. ${timePickerState.minute} min."
-                onAction(CreateTrailAction.EstimatedTimeChanged(time))
-                onAction(CreateTrailAction.ValidateEstimatedTime(time))
+                onAction(
+                    CreateTrailAction.EstimatedTimeChanged(
+                        EstimatedHikingTime(
+                            timePickerState.hour,
+                            timePickerState.minute
+                        )
+                    )
+                )
+                onAction(
+                    CreateTrailAction.ValidateEstimatedTime(
+                        EstimatedHikingTime(
+                            timePickerState.hour,
+                            timePickerState.minute
+                        )
+                    )
+                )
             },
             validateTitle = { onAction(CreateTrailAction.ValidateTitle(state.title)) },
             validateDifficulty = { onAction(CreateTrailAction.ValidateDifficulty(state.difficulty)) },
-            validateEstimatedTime = { onAction(CreateTrailAction.ValidateEstimatedTime(state.estimatedTime)) },
+            validateEstimatedTime = {
+                onAction(
+                    CreateTrailAction.ValidateEstimatedTime(
+                        EstimatedHikingTime(timePickerState.hour, timePickerState.minute)
+                    )
+                )
+            },
             validateDescription = { onAction(CreateTrailAction.ValidateDescription(state.description)) },
             timePickerState = timePickerState,
         )
@@ -112,20 +121,37 @@ fun CreateTrailScreen(
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
 
         AddGpxFile(
-            onGpxSelected = { gpx = it }
+            onGpxSelected = { onAction(CreateTrailAction.GpxFileSelected(it)) }
         )
 
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
 
-
         ImagesRow(
-            photos = photos,
-            onImagesSelected = { photos = it },
-            onDiscardImage = { photos = photos.minus(it) }
+            photos = state.photosUri,
+            onImagesSelected = { onAction(CreateTrailAction.PhotosSelected(it)) },
+            onDiscardImage = { onAction(CreateTrailAction.RemovePhoto(it)) }
         )
 
         Button(
-            onClick = {},
+            onClick = {
+                if (state.gpxUri != null) {
+                    if (validate(state)) {
+                        onAction(CreateTrailAction.CreateTrail)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Proszę wypełnić formularz.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Dodaj plik z rozszerzeniem .gpx!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -137,6 +163,17 @@ fun CreateTrailScreen(
             )
         }
     }
+}
+
+private fun validate(state: CreateTrailState): Boolean {
+    return (!state.difficultyError
+            && !state.estimatedTimeError
+            && !state.titleError
+            && !state.descriptionError
+            && state.title.isNotBlank()
+            && state.difficulty.isNotBlank()
+            && state.estimatedTime != null
+            && state.description.isNotBlank())
 }
 
 @PreviewLightDark

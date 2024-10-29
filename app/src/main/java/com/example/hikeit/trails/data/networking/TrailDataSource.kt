@@ -9,4 +9,6 @@ interface TrailDataSource {
     suspend fun getTrails() : Result<List<Trail>, NetworkError>
 
     suspend fun getTrailDetails(id: String) : Result<TrailDetails, NetworkError>
+
+    suspend fun saveTrail(trailDetails: TrailDetails) : Result<Boolean, NetworkError>
 }

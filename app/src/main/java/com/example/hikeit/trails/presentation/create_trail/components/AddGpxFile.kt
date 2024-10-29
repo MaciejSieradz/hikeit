@@ -23,7 +23,6 @@ import com.google.maps.android.compose.GoogleMap
 fun AddGpxFile(
     onGpxSelected: (Uri) -> Unit
 ) {
-
     val context = LocalContext.current
 
     var visible by remember {
@@ -40,7 +39,7 @@ fun AddGpxFile(
             val inputStream = contentResolver.openInputStream(uri)
 
             inputStream?.let { stream ->
-                val content = stream.bufferedReader().use { reader -> reader.readText() }
+                val content = stream.reader().readText()
                 Log.d("Content of gpx file", content)
             }
 
