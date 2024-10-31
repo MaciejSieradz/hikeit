@@ -59,7 +59,8 @@ class CreateTrailViewModel(
 
             is CreateTrailAction.GpxFileSelected -> {
                 _state.value = _state.value.copy(
-                    gpxUri = action.gpxUri
+                    gpxUri = action.gpxUri,
+                    route = action.route
                 )
             }
 

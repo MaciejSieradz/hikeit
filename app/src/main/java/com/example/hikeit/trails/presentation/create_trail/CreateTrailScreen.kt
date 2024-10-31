@@ -121,7 +121,15 @@ fun CreateTrailScreen(
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
 
         AddGpxFile(
-            onGpxSelected = { onAction(CreateTrailAction.GpxFileSelected(it)) }
+            route = state.route,
+            onGpxSelected = { uri, route ->
+                onAction(
+                    CreateTrailAction.GpxFileSelected(
+                        gpxUri = uri,
+                        route = route
+                    )
+                )
+            }
         )
 
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
