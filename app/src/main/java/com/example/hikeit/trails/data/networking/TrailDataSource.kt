@@ -24,4 +24,8 @@ interface TrailDataSource {
     suspend fun getSavedTrails() : Result<List<Trail>, NetworkError>
 
     suspend fun getUserTrails() : Result<List<Trail>, NetworkError>
+
+    suspend fun removeTrail(id: String) : Result<Boolean, NetworkError>
+
+    suspend fun updateTrail(id: String, trailForm: TrailForm) : Result<TrailDto, NetworkError>
 }

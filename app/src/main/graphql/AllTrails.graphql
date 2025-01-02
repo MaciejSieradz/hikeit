@@ -50,6 +50,24 @@ mutation SaveTrail($trailId: String!) {
     markTrailAsSaved(trailId: $trailId)
 }
 
+mutation UpdateTrail($trailId: String!, $trail: TrailInput!) {
+    updateTrail(id: $trailId, trailInput: $trail) {
+        id
+        title
+        difficulty
+        distance
+        photos
+        estimatedHikingTime {
+            hours
+            minutes
+        }
+    }
+}
+
 mutation UnmarkTrail($trailId: String!) {
     unmarkTrail(trailId: $trailId)
+}
+
+mutation DeleteTrail($trailId: String!) {
+    deleteTrail(id: $trailId)
 }

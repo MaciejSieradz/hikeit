@@ -2,6 +2,7 @@ package com.example.hikeit.trails.presentation.create_trail.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
@@ -92,7 +93,7 @@ fun CreateTrailForm(
             supportingText = R.string.required,
             isError = createTrailState.descriptionError,
             validate = validateDescription,
-            minLines = 5
+            minLines = 5,
         )
     }
 }

@@ -27,7 +27,7 @@ class AddReviewViewModel(
         when(action) {
 
             is AddReviewAction.MarkChanged -> {
-                _state.value = _state.value.copy(mark = action.mark)
+                _state.value = _state.value.copy(rating = action.mark)
             }
 
             is AddReviewAction.PhotosSelected -> {

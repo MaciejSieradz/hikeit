@@ -20,6 +20,7 @@ query GetTrailById($id: String!) {
             rating
             commentDate
             comment
+            photosUrl
         }
         gpxUrl
         isMarked

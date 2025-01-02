@@ -53,4 +53,19 @@ class ProfileViewModel(
                 }
         }
     }
+
+    fun onAction(action: ProfileAction) {
+        when(action) {
+            is ProfileAction.RemoveTrail -> {
+                viewModelScope.launch {
+                    trailRepository.removeTrail(action.id)
+                        .onSuccess {
+                            _events.send(ProfileEvent.RemovedTrail)
+                            loadTrails()
+                        }
+                }
+
+            }
+        }
+    }
 }

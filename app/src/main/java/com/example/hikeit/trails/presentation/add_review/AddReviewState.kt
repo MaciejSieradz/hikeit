@@ -4,7 +4,7 @@ import android.net.Uri
 import com.example.hikeit.trails.domain.Review
 
 data class AddReviewState(
-    val mark: Int,
+    val rating: Int,
     val photosUri: List<Uri> = emptyList(),
     val photos: List<ByteArray> = emptyList(),
     val description: String? = null
@@ -12,7 +12,7 @@ data class AddReviewState(
 
 fun AddReviewState.createReview() : Review {
     return Review(
-        mark = mark,
+        mark = rating,
         description = description,
         photos = photos
     )

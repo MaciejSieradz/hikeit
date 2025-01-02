@@ -1,4 +1,5 @@
 package com.example.hikeit.trails.presentation.profile
 
-interface ProfileEvent {
+sealed interface ProfileEvent {
+    data object RemovedTrail: ProfileEvent
 }

@@ -6,7 +6,7 @@ import com.example.hikeit.trails.domain.TrailDetails
 
 data class TrailDetailUi(
     val trailId: String,
-    val trailPhotoUrl: String,
+    val trailPhotos: List<String>,
     val title : String,
     val difficulty: String,
     val rating: String,
@@ -25,7 +25,7 @@ fun TrailDetails.toTrailDetailsUi() : TrailDetailUi {
 
     return TrailDetailUi(
         trailId = id,
-        trailPhotoUrl = trailPhotoUrl,
+        trailPhotos = trailPhotos,
         title = title,
         difficulty = difficulty,
         rating = "${formatter.format(rating)} ($numberOfRatings)",

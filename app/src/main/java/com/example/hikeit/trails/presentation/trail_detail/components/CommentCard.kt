@@ -1,6 +1,7 @@
 package com.example.hikeit.trails.presentation.trail_detail.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,24 +17,36 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.hikeit.trails.presentation.models.UserCommentUi
-import com.example.hikeit.ui.theme.HikeItTheme
 
 @Composable
 fun CommentCard(
     commentUi: UserCommentUi,
     modifier: Modifier = Modifier
 ) {
+    val openCommentDialog = remember { mutableStateOf(false) }
+    when {
+        openCommentDialog.value -> {
+            ReadReviewModal(
+                comment = commentUi,
+                onDiscardButton = { openCommentDialog.value = false }
+            )
+        }
+    }
     Card(
         modifier = modifier
+            .clickable {
+                openCommentDialog.value = true
+            }
     ) {
         Column(
             modifier = Modifier
@@ -83,7 +96,7 @@ fun CommentCard(
                 }
             }
             Text(
-                text = commentUi.comment,
+                text = commentUi.comment ?: "",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 overflow = TextOverflow.Ellipsis,
@@ -93,23 +106,3 @@ fun CommentCard(
         }
     }
 }
-
-@PreviewLightDark
-@Composable
-private fun CommentCardPreview() {
-    HikeItTheme {
-        CommentCard(
-            commentUi = commentUi,
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
-        )
-    }
-}
-
-internal val commentUi = UserCommentUi(
-    userAvatarUrl = "",
-    username = "Maciej Sieradz",
-    commentDate = "1 miesiąc temu",
-    rating = 4,
-    comment = "Bardzo fajna trasa z cudownymi widokami! Przy Morskim Oku ludzi bardzo dużo, " +
-            "ale po skręceniu na Szpiglasowy Wierch szliśmy już tylko my. Zdecydowanie warto!",
-)

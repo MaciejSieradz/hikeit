@@ -45,4 +45,15 @@ class TrailRepositoryImpl(
     override suspend fun getUserTrails(): Result<List<Trail>, NetworkError> {
         return trailDataSource.getUserTrails()
     }
+
+    override suspend fun removeTrail(id: String): Result<Boolean, NetworkError> {
+        return trailDataSource.removeTrail(id)
+    }
+
+    override suspend fun updateTrail(
+        id: String,
+        trailForm: TrailForm
+    ): Result<TrailDto, NetworkError> {
+        return trailDataSource.updateTrail(id, trailForm)
+    }
 }

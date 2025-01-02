@@ -8,6 +8,8 @@ type CommentDto {
   commentDate: String
 
   comment: String
+
+  photosUrl: [String]
 }
 
 type EstimatedHikingTimeDto {
@@ -24,6 +26,10 @@ input EstimatedHikingTimeInput {
 
 type Mutation {
   createTrail(trailInput: TrailInput): TrailDto
+
+  updateTrail(id: String, trailInput: TrailInput): TrailDto
+
+  deleteTrail(id: String): Boolean
 
   addReview(trailId: String, reviewInput: ReviewInput): Boolean
 

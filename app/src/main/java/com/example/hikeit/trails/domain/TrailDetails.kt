@@ -6,7 +6,7 @@ import com.example.hikeit.core.data.xml.Route
 @Immutable
 data class TrailDetails (
     val id: String,
-    val trailPhotoUrl: String,
+    val trailPhotos: List<String>,
     val title : String,
     val difficulty: String,
     val rating: Double,

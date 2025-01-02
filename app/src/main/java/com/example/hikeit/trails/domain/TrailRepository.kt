@@ -12,13 +12,17 @@ interface TrailRepository {
 
     suspend fun saveTrail(trailForm: TrailForm): Result<TrailDto, NetworkError>
 
-    suspend fun addReview(trailId: String, review: Review) : Result<Boolean, NetworkError>
+    suspend fun addReview(trailId: String, review: Review): Result<Boolean, NetworkError>
 
-    suspend fun markTrailAsSaved(trailId: String) : Result<Boolean, NetworkError>
+    suspend fun markTrailAsSaved(trailId: String): Result<Boolean, NetworkError>
 
-    suspend fun unmarkTrail(trailId: String) : Result<Boolean, NetworkError>
+    suspend fun unmarkTrail(trailId: String): Result<Boolean, NetworkError>
 
-    suspend fun getSavedTrails() : Result<List<Trail>, NetworkError>
+    suspend fun getSavedTrails(): Result<List<Trail>, NetworkError>
 
-    suspend fun getUserTrails() : Result<List<Trail>, NetworkError>
+    suspend fun getUserTrails(): Result<List<Trail>, NetworkError>
+
+    suspend fun removeTrail(id: String): Result<Boolean, NetworkError>
+
+    suspend fun updateTrail(id: String, trailForm: TrailForm): Result<TrailDto, NetworkError>
 }

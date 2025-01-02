@@ -101,7 +101,7 @@ fun AddReviewScreen(
                     .fillMaxWidth()
             ) {
                 Text(
-                    "jeden dwa trzy cztery",
+                    "Dodaj recenzję",
                     style = MaterialTheme.typography.titleLarge
                 )
                 IconButton(
@@ -126,7 +126,7 @@ fun AddReviewScreen(
             }
             Spacer(modifier = Modifier.padding(vertical = 16.dp))
             StarRow(
-                mark = addReviewState.mark,
+                mark = addReviewState.rating,
                 onStarClicked = { onAction(AddReviewAction.MarkChanged(it)) })
             Spacer(modifier = Modifier.padding(vertical = 8.dp))
             OutlinedTextField(

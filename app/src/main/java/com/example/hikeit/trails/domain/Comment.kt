@@ -5,5 +5,6 @@ data class Comment(
     val username: String,
     val rating: Int,
     val commentDate: String,
-    val comment: String
+    val comment: String?,
+    val photosUrl: List<String>
 )

@@ -177,7 +177,15 @@ fun HikeNavHost(
             val viewModel = koinViewModel<ProfileViewModel>()
             ProfileRoute(
                 viewModel = viewModel,
-                onTrailClick = { trailId -> navHostController.navigateToTrail(trailId) }
+                onAction = viewModel::onAction,
+                onLogoutClick = {
+                    navHostController.navigate(Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                onTrailClick = { trailId ->
+                    navHostController.navigateToTrail(trailId)
+                }
             )
         }
     }

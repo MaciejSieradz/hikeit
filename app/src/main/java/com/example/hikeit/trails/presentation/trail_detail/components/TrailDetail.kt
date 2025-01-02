@@ -108,7 +108,7 @@ fun TrailDetail(
             modifier = Modifier.padding(vertical = 16.dp)
         )
         Text(
-            text = trailDetailUi.description,
+            text = trailDetailUi.description.replace("\n", ""),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground
         )
@@ -258,7 +258,8 @@ internal val comments =
             commentDate = "1 miesiąc temu",
             comment =
             "Bardzo fajna trasa z cudownymi widokami! Przy Morskim Oku ludzi bardzo dużo, " +
-                    "ale po skręceniu na Szpiglasowy Wierch szliśmy już tylko my. Zdecydowanie warto!"
+                    "ale po skręceniu na Szpiglasowy Wierch szliśmy już tylko my. Zdecydowanie warto!",
+            photosUrl = emptyList()
         ),
         UserCommentUi(
             userAvatarUrl = "123",
@@ -267,7 +268,9 @@ internal val comments =
             commentDate = "1 miesiąc temu",
             comment =
             "Bardzo fajna trasa z cudownymi widokami! Przy Morskim Oku ludzi bardzo dużo, " +
-                    "ale po skręceniu na Szpiglasowy Wierch szliśmy już tylko my. Zdecydowanie warto!"
+                    "ale po skręceniu na Szpiglasowy Wierch szliśmy już tylko my. Zdecydowanie warto!",
+
+            photosUrl = emptyList()
         ),
         UserCommentUi(
             userAvatarUrl = "123",
@@ -276,6 +279,8 @@ internal val comments =
             commentDate = "1 miesiąc temu",
             comment =
             "Bardzo fajna trasa z cudownymi widokami! Przy Morskim Oku ludzi bardzo dużo, " +
-                    "ale po skręceniu na Szpiglasowy Wierch szliśmy już tylko my. Zdecydowanie warto!"
+                    "ale po skręceniu na Szpiglasowy Wierch szliśmy już tylko my. Zdecydowanie warto!",
+
+            photosUrl = emptyList()
         )
     )
