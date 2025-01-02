@@ -1,0 +1,3 @@
+mutation AddReview($trailId: String!, $reviewInput: ReviewInput!) {
+    addReview(trailId: $trailId, reviewInput: $reviewInput)
+}

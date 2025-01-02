@@ -9,8 +9,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.math.RoundingMode
 import kotlin.math.asin
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -65,35 +67,50 @@ class CreateTrailViewModel(
 
             is CreateTrailAction.GpxFileSelected -> {
 
-                val points = action.route.trail.points
-                var elevation = 0
-                var negativeElevation = 0
+                viewModelScope.launch {
+                    val points = action.route.trail.points
+                    var elevation = 0
+                    var negativeElevation = 0
+                    var distance = 0.0
+                    var maxElevation = points[0].elevation
 
-                val latitudes = points.mapIndexed { index, point ->
-                    if (index != 0) {
-                        val elevationDiff = point.elevation - points[index - 1].elevation
-                        if (elevationDiff > 1) {
-                            elevation += elevationDiff
+                    val latitudes = points.mapIndexed { index, point ->
+                        if (index != 0) {
+                            val elevationDiff = point.elevation - points[index - 1].elevation
+                            distance += haversine(
+                                point.latitude,
+                                point.longitude,
+                                points[index - 1].latitude,
+                                points[index - 1].longitude
+                            )
+                            if (elevationDiff > 1) {
+                                elevation += elevationDiff
+                            }
+                            if (elevationDiff < -1) {
+                                negativeElevation += -elevationDiff
+                            }
+                            maxElevation = max(maxElevation, point.elevation)
                         }
-                        if (elevationDiff < -1) {
-                            negativeElevation += -elevationDiff
-                        }
+
+                        LatLng(point.latitude, point.longitude)
                     }
 
-                    LatLng(point.latitude, point.longitude)
+                    _state.value = _state.value.copy(
+                        gpx = action.gpx,
+                        points = latitudes,
+                        elevation = elevation,
+                        negativeElevation = negativeElevation,
+                        maxElevation = maxElevation,
+                        distance = distance.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+                            .toDouble()
+                    )
                 }
-
-                _state.value = _state.value.copy(
-                    gpxUri = action.gpxUri,
-                    points = latitudes,
-                    elevation = elevation,
-                    negativeElevation = negativeElevation
-                )
             }
 
             is CreateTrailAction.PhotosSelected -> {
                 _state.value = _state.value.copy(
-                    photosUri = action.photosUri
+                    photosUri = action.photosUri,
+                    photos = action.photos
                 )
             }
 
@@ -131,7 +148,7 @@ class CreateTrailViewModel(
 }
 
 // Haversine function is a function that counts the distance between two points on a sphere
-private fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double) : Double {
+private fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
 
     val dLat = Math.toRadians(lat2 - lat1)
     val dLon = Math.toRadians(lon2 - lon1)

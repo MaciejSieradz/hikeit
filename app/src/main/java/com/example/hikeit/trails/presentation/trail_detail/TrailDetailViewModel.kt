@@ -33,6 +33,38 @@ class TrailDetailViewmodel(
     private val _events = Channel<TrailDetailEvent>()
     val events = _events.receiveAsFlow()
 
+    fun onAction(action: TrailDetailAction) {
+        when (action) {
+            is TrailDetailAction.ChangeSaveBookmark -> {
+                viewModelScope.launch {
+                    if (!action.isMarked) {
+                        trailRepository.markTrailAsSaved(trailId)
+                            .onSuccess {
+                                _state.value = _state.value.copy(
+                                    trailDetails = _state.value.trailDetails!!.copy(isMarked = it)
+                                )
+                                _events.send(TrailDetailEvent.MarkedTrail)
+                            }
+                            .onError { error ->
+                                _events.send(TrailDetailEvent.Error(error))
+                            }
+                    } else {
+                        trailRepository.unmarkTrail(trailId)
+                            .onSuccess {
+                                _state.value = _state.value.copy(
+                                    trailDetails = _state.value.trailDetails!!.copy(isMarked = it)
+                                )
+                                _events.send(TrailDetailEvent.UnmarkedTrail)
+                            }
+                            .onError { error ->
+                                _events.send(TrailDetailEvent.Error(error))
+                            }
+                    }
+                }
+            }
+        }
+    }
+
     private fun loadTrailDetails(trailId: String) {
         viewModelScope.launch {
             _state.update {

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.apollo)
 }
 
 android {
@@ -79,6 +80,8 @@ dependencies {
 
     implementation(libs.bundles.maps)
 
+    implementation(libs.bundles.credentials)
+
     implementation(libs.coil)
     implementation(libs.google.navigation)
 
@@ -86,6 +89,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.konsume.xml)
+
+    implementation(libs.apollo.runtime)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
@@ -99,6 +104,16 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.navigation.test)
+}
+
+apollo {
+    service("service") {
+        packageName.set("com.example.hikeit")
+        introspection {
+            endpointUrl.set("http://localhost:8080/graphql")
+            schemaFile.set(file("src/main/graphql/schema.graphqls"))
+        }
+    }
 }
 
 java {

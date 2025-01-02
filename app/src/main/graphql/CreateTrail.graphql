@@ -1,0 +1,13 @@
+mutation CreateTrail($trailInput: TrailInput!) {
+    createTrail(trailInput: $trailInput) {
+        id
+        title
+        difficulty
+        distance
+        photos
+        estimatedHikingTime {
+            hours
+            minutes
+        }
+    }
+}

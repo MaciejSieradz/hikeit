@@ -10,8 +10,8 @@ sealed interface CreateTrailAction {
     data class DifficultyChanged(val difficulty: String) : CreateTrailAction
     data class DescriptionChanged(val description: String) : CreateTrailAction
     data class EstimatedTimeChanged(val estimatedTime: EstimatedHikingTime) : CreateTrailAction
-    data class GpxFileSelected(val gpxUri: Uri, val route: Route) : CreateTrailAction
-    data class PhotosSelected(val photosUri: List<Uri>) : CreateTrailAction
+    data class GpxFileSelected(val gpx: ByteArray, val route: Route) : CreateTrailAction
+    data class PhotosSelected(val photosUri: List<Uri>, val photos: List<ByteArray>) : CreateTrailAction
     data class RemovePhoto(val photoUri: Uri) : CreateTrailAction
 
     data class ValidateTitle(val title: String) : CreateTrailAction

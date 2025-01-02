@@ -1,6 +1,5 @@
 package com.example.hikeit.trails.presentation.trail_detail.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,10 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.example.hikeit.R
+import coil.compose.AsyncImage
 import com.example.hikeit.trails.presentation.models.UserCommentUi
 import com.example.hikeit.ui.theme.HikeItTheme
 
@@ -45,8 +44,8 @@ fun CommentCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_launcher_foreground),
+                AsyncImage(
+                    model = commentUi.userAvatarUrl,
                     contentDescription = "User Avatar",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -86,7 +85,10 @@ fun CommentCard(
             Text(
                 text = commentUi.comment,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                overflow = TextOverflow.Ellipsis,
+                minLines = 4,
+                maxLines = 4
             )
         }
     }

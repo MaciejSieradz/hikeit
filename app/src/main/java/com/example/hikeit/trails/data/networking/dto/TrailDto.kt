@@ -7,7 +7,6 @@ data class TrailDto(
     val id: String,
     val photoUrl: String,
     val title: String,
-    val mountains: String,
     val rating: Double,
     val difficulty: String,
     val distance: Double,

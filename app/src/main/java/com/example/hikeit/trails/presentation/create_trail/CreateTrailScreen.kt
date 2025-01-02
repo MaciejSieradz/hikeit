@@ -124,10 +124,12 @@ fun CreateTrailScreen(
             points = state.points,
             elevation = state.elevation,
             negativeElevation = state.negativeElevation,
-            onGpxSelected = { uri, route ->
+            distance = state.distance,
+            maxElevation = state.maxElevation,
+            onGpxSelected = { gpx, route ->
                 onAction(
                     CreateTrailAction.GpxFileSelected(
-                        gpxUri = uri,
+                        gpx = gpx,
                         route = route
                     )
                 )
@@ -138,13 +140,20 @@ fun CreateTrailScreen(
 
         ImagesRow(
             photos = state.photosUri,
-            onImagesSelected = { onAction(CreateTrailAction.PhotosSelected(it)) },
+            onImagesSelected = { uri, photos ->
+                onAction(
+                    CreateTrailAction.PhotosSelected(
+                        uri,
+                        photos
+                    )
+                )
+            },
             onDiscardImage = { onAction(CreateTrailAction.RemovePhoto(it)) }
         )
 
         Button(
             onClick = {
-                if (state.gpxUri != null) {
+                if (state.gpx != null) {
                     if (validate(state)) {
                         onAction(CreateTrailAction.CreateTrail)
                     } else {

@@ -1,0 +1,55 @@
+query AllTrails {
+    getAllTrails {
+        id
+        title
+        difficulty
+        distance
+        elevationGain
+        estimatedHikingTime {
+            hours
+            minutes
+        }
+        photos
+        rating
+    }
+}
+
+query UserTrails{
+    getUserTrails {
+        id
+        title
+        difficulty
+        distance
+        elevationGain
+        estimatedHikingTime {
+            hours
+            minutes
+        }
+        photos
+        rating
+    }
+}
+
+query MarkedTrails {
+    getSavedTrails {
+        id
+        title
+        difficulty
+        distance
+        elevationGain
+        estimatedHikingTime {
+            hours
+            minutes
+        }
+        photos
+        rating
+    }
+}
+
+mutation SaveTrail($trailId: String!) {
+    markTrailAsSaved(trailId: $trailId)
+}
+
+mutation UnmarkTrail($trailId: String!) {
+    unmarkTrail(trailId: $trailId)
+}

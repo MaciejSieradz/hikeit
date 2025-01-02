@@ -1,9 +1,11 @@
 package com.example.hikeit.trails.presentation.models
 
+import com.example.hikeit.core.data.xml.Route
 import com.example.hikeit.trails.data.mappers.getPolishNumberFormatter
 import com.example.hikeit.trails.domain.TrailDetails
 
 data class TrailDetailUi(
+    val trailId: String,
     val trailPhotoUrl: String,
     val title : String,
     val difficulty: String,
@@ -12,7 +14,9 @@ data class TrailDetailUi(
     val elevationGain: String,
     val maxHeight: String,
     val estimatedHikingTime: String,
-    val description: String
+    val description: String,
+    val route: Route,
+    val isMarked: Boolean
 )
 
 fun TrailDetails.toTrailDetailsUi() : TrailDetailUi {
@@ -20,6 +24,7 @@ fun TrailDetails.toTrailDetailsUi() : TrailDetailUi {
     val formatter = getPolishNumberFormatter()
 
     return TrailDetailUi(
+        trailId = id,
         trailPhotoUrl = trailPhotoUrl,
         title = title,
         difficulty = difficulty,
@@ -28,6 +33,8 @@ fun TrailDetails.toTrailDetailsUi() : TrailDetailUi {
         elevationGain = "$elevationGain m",
         maxHeight = "$maxHeight m",
         estimatedHikingTime = "${estimatedHikingTime.hours} godz. ${estimatedHikingTime.minutes} min.",
-        description = description
+        description = description,
+        route = route,
+        isMarked = isMarked
     )
 }

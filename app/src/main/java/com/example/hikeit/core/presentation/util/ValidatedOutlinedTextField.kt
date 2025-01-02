@@ -23,6 +23,7 @@ fun ValidatedOutlinedTextField(
     @StringRes supportingText: Int,
     validate: () -> Unit,
     minLines: Int = 1,
+    modifier: Modifier = Modifier
 ) {
     var focus by rememberSaveable { mutableStateOf(false) }
 
@@ -56,7 +57,7 @@ fun ValidatedOutlinedTextField(
             }
         },
         colors = colors,
-        modifier = Modifier
+        modifier = modifier
             .onFocusChanged {
                 if (focus && !it.isFocused) {
                     validate()

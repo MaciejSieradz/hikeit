@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "2854368148",
+    "project_id": "hiker-fe7dc",
+    "storage_bucket": "hiker-fe7dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2854368148:android:557505024fb40e19145581",
+        "android_client_info": {
+          "package_name": "com.example.hikeit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZMVazlf9WwhYjVQ61dt5ndRLAdCuirGM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

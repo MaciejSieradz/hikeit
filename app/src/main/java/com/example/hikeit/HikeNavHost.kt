@@ -11,8 +11,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.hikeit.core.presentation.util.ObserveAsEvents
 import com.example.hikeit.core.presentation.util.toString
+import com.example.hikeit.trails.data.security.AppState
+import com.example.hikeit.trails.presentation.add_review.AddReviewRoute
+import com.example.hikeit.trails.presentation.add_review.AddReviewViewModel
 import com.example.hikeit.trails.presentation.create_trail.CreateTrailRoute
 import com.example.hikeit.trails.presentation.create_trail.CreateTrailViewModel
+import com.example.hikeit.trails.presentation.login.LoginScreen
+import com.example.hikeit.trails.presentation.profile.ProfileRoute
+import com.example.hikeit.trails.presentation.profile.ProfileViewModel
+import com.example.hikeit.trails.presentation.saved_trail_list.SavedTrailListRoute
+import com.example.hikeit.trails.presentation.saved_trail_list.SavedTrailListViewModel
 import com.example.hikeit.trails.presentation.trail_detail.TrailDetailEvent
 import com.example.hikeit.trails.presentation.trail_detail.TrailDetailRoute
 import com.example.hikeit.trails.presentation.trail_detail.TrailDetailViewmodel
@@ -20,9 +28,6 @@ import com.example.hikeit.trails.presentation.trail_list.TrailListEvent
 import com.example.hikeit.trails.presentation.trail_list.TrailListRoute
 import com.example.hikeit.trails.presentation.trail_list.TrailListViewModel
 import com.example.hikeit.ui.navigate.NavigateScreen
-import com.example.hikeit.ui.profile.ProfileScreen
-import com.example.hikeit.ui.saved.SavedScreen
-import com.example.hikeit.ui.start.StartScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -34,10 +39,20 @@ fun HikeNavHost(
 
     NavHost(
         navController = navHostController,
-        startDestination = Search.route,
+        startDestination = Login.route,
         modifier = modifier
     ) {
-
+        composable(
+            route = Login.route
+        ) {
+            LoginScreen(onSuccessLogin = {
+                navHostController.navigate(Search.route) {
+                    popUpTo(Login.route) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
         composable(
             route = Search.route
         ) {
@@ -58,6 +73,9 @@ fun HikeNavHost(
                 viewModel = viewModel,
                 onTrailClick = { trailId ->
                     navHostController.navigateToTrail(trailId)
+                },
+                onProfileClick = {
+                    navHostController.navigateSingleTopTo(Profile.route)
                 },
                 onFabClick = {
                     navHostController.navigateSingleTopTo(CreateTrail.route)
@@ -93,21 +111,74 @@ fun HikeNavHost(
                             Toast.LENGTH_LONG
                         ).show()
                     }
+
+                    is TrailDetailEvent.MarkedTrail -> {
+                        Toast.makeText(
+                            context,
+                            "Pomyślnie zapisano wycieczkę!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    is TrailDetailEvent.UnmarkedTrail -> {
+                        Toast.makeText(
+                            context,
+                            "Pomyślnie usunięto wycieczkę z zapisanych.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
-            TrailDetailRoute(viewModel)
+            TrailDetailRoute(
+                viewModel = viewModel,
+                onAction = viewModel::onAction,
+                onStarClicked = { mark ->
+                    navHostController.navigateToCreateReview(trailId!!, mark)
+                },
+                onFabClicked = {
+                    AppState.trail = it
+                    navHostController.navigateSingleTopTo("navigate")
+                }
+            )
+        }
+        composable(
+            route = "${CreateReview.route}/{${CreateReview.trailId}}/{${CreateReview.mark}}",
+            arguments = CreateReview.arguments
+        ) { navBackStackEntry ->
+            val trailId = navBackStackEntry.arguments?.getString(CreateReview.trailId)!!
+            val mark = navBackStackEntry.arguments?.getInt(CreateReview.mark)!!
+
+            val viewModel = koinViewModel<AddReviewViewModel> {
+                parametersOf(trailId, mark)
+            }
+            val context = LocalContext.current
+            AddReviewRoute(
+                viewModel = viewModel,
+                onAction = viewModel::onAction,
+                onDiscardButton = { navHostController.popBackStack() })
         }
         composable(route = Navigate.route) {
             NavigateScreen()
         }
-        composable(route = Start.route) {
-            StartScreen()
-        }
         composable(route = Saved.route) {
-            SavedScreen()
+            val viewModel = koinViewModel<SavedTrailListViewModel>()
+            val context = LocalContext.current
+            ObserveAsEvents(events = viewModel.events) { event ->
+                when (event) {
+                    else -> {}
+                }
+            }
+            SavedTrailListRoute(
+                viewModel = viewModel,
+                onTrailClick = { trailId -> navHostController.navigateToTrail(trailId) }
+            )
         }
         composable(route = Profile.route) {
-            ProfileScreen()
+            val viewModel = koinViewModel<ProfileViewModel>()
+            ProfileRoute(
+                viewModel = viewModel,
+                onTrailClick = { trailId -> navHostController.navigateToTrail(trailId) }
+            )
         }
     }
 }
@@ -125,4 +196,8 @@ fun NavHostController.navigateSingleTopTo(route: String) =
 
 private fun NavHostController.navigateToTrail(trailId: String) {
     this.navigateSingleTopTo("${TrailInfo.route}/$trailId")
+}
+
+private fun NavHostController.navigateToCreateReview(trailId: String, mark: Int) {
+    this.navigateSingleTopTo("${CreateReview.route}/$trailId/$mark")
 }

@@ -1,6 +1,7 @@
 package com.example.hikeit.trails.domain
 
 import androidx.compose.runtime.Immutable
+import com.example.hikeit.core.data.xml.Route
 
 @Immutable
 data class TrailDetails (
@@ -15,5 +16,7 @@ data class TrailDetails (
     val maxHeight: Int,
     val estimatedHikingTime: EstimatedHikingTime,
     val description: String,
-    val comments: List<Comment>
+    val route: Route,
+    val comments: List<Comment>,
+    val isMarked: Boolean
 )

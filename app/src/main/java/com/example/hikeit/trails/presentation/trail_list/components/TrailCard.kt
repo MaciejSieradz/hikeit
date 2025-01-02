@@ -57,13 +57,6 @@ fun TrailCard(
             modifier = Modifier.padding(top = 4.dp),
             color = MaterialTheme.colorScheme.onBackground
         )
-
-        Text(
-            text = trailUi.mountains,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
         Row(
             verticalAlignment = Alignment.Bottom
         ) {
@@ -100,6 +93,5 @@ internal val trailUi = TrailUi(
     "",
     "https://tatromaniak.pl/wp-content/uploads/2015/07/szpiglasowy_rafal_ociepka_360_kopia2.jpg",
     "Szpiglasowy Wierch do Doliny Pięciu Stawów",
-    "Tatry",
     "4.8 - Zaawansowany - 24.0km - Szac. 8 godz. 14 min"
 )

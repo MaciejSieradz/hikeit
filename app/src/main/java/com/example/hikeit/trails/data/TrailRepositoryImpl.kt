@@ -3,11 +3,12 @@ package com.example.hikeit.trails.data
 import com.example.hikeit.core.domain.util.NetworkError
 import com.example.hikeit.core.domain.util.Result
 import com.example.hikeit.trails.data.networking.TrailDataSource
+import com.example.hikeit.trails.data.networking.dto.TrailDto
+import com.example.hikeit.trails.domain.Review
 import com.example.hikeit.trails.domain.Trail
 import com.example.hikeit.trails.domain.TrailDetails
 import com.example.hikeit.trails.domain.TrailForm
 import com.example.hikeit.trails.domain.TrailRepository
-import java.util.UUID
 
 class TrailRepositoryImpl(
     private val trailDataSource: TrailDataSource
@@ -21,22 +22,27 @@ class TrailRepositoryImpl(
         return trailDataSource.getTrailDetails(trailId)
     }
 
-    override suspend fun saveTrail(trailForm: TrailForm): Result<Boolean, NetworkError> {
-        val trail = TrailDetails(
-            id = UUID.randomUUID().toString(),
-            trailPhotoUrl = trailForm.photosUri[0].toString(),
-            title = trailForm.title,
-            difficulty = trailForm.difficulty.difficultyName,
-            rating = 0.0,
-            numberOfRatings = 0,
-            distance = 20.0,
-            elevationGain = 2000,
-            estimatedHikingTime = trailForm.estimatedHikingTime,
-            maxHeight = 2500,
-            description = trailForm.description,
-            comments = emptyList()
-        )
+    override suspend fun saveTrail(trailForm: TrailForm): Result<TrailDto, NetworkError> {
+        return trailDataSource.saveTrail(trailForm)
+    }
 
-        return trailDataSource.saveTrail(trail)
+    override suspend fun addReview(trailId: String, review: Review): Result<Boolean, NetworkError> {
+        return trailDataSource.addReview(trailId, review)
+    }
+
+    override suspend fun markTrailAsSaved(trailId: String): Result<Boolean, NetworkError> {
+        return trailDataSource.markTrailAsSaved(trailId)
+    }
+
+    override suspend fun unmarkTrail(trailId: String): Result<Boolean, NetworkError> {
+        return trailDataSource.unmarkTrail(trailId)
+    }
+
+    override suspend fun getSavedTrails(): Result<List<Trail>, NetworkError> {
+        return trailDataSource.getSavedTrails()
+    }
+
+    override suspend fun getUserTrails(): Result<List<Trail>, NetworkError> {
+        return trailDataSource.getUserTrails()
     }
 }

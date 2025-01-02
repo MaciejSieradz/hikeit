@@ -9,7 +9,6 @@ fun TrailDto.toTrail(): Trail {
         id = id,
         photoUrl = photoUrl,
         title = title,
-        mountains = mountains,
         rating = rating,
         difficulty = difficulty,
         distance = distance,

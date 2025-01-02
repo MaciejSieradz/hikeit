@@ -1,0 +1,27 @@
+query GetTrailById($id: String!) {
+    getTrailById(id: $id) {
+        id
+        title
+        difficulty
+        rating
+        numberOfRatings
+        distance
+        elevationGain
+        maxHeight
+        estimatedHikingTime {
+            hours
+            minutes
+        }
+        description
+        photos
+        comments {
+            userAvatarUrl
+            username
+            rating
+            commentDate
+            comment
+        }
+        gpxUrl
+        isMarked
+    }
+}

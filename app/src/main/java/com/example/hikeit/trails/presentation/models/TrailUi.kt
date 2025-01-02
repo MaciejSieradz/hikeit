@@ -8,7 +8,6 @@ data class TrailUi(
     val id: String,
     val photoUrl: String,
     val title: String,
-    val mountains: String,
     val trailAdditionalInfo: String
 )
 
@@ -26,7 +25,6 @@ fun Trail.toTrailUi(): TrailUi {
         id = id,
         photoUrl = photoUrl,
         title = title,
-        mountains = mountains,
         trailAdditionalInfo = createAdditionalInfo(rating, difficulty, estimatedHikingTime)
     )
 }

@@ -23,7 +23,7 @@ import com.example.hikeit.core.presentation.util.ImageWithDiscardButton
 @Composable
 fun ImagesRow(
     photos: List<Uri>,
-    onImagesSelected: (List<Uri>) -> Unit,
+    onImagesSelected: (List<Uri>, List<ByteArray>) -> Unit,
     onDiscardImage: (Uri) -> Unit,
     modifier: Modifier = Modifier
 ) {

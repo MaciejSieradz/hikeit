@@ -12,12 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.hikeit.R
 import com.example.hikeit.trails.presentation.models.TrailDetailUi
-import com.example.hikeit.trails.presentation.trail_detail.trailDetailsPreview
-import com.example.hikeit.ui.theme.HikeItTheme
 
 @Composable
 fun TrailStatisticSection(
@@ -84,13 +81,13 @@ fun TrailStatistic(number: String, description: String) {
         )
     }
 }
-
-@PreviewLightDark
-@Composable
-fun TrailStatisticSectionPreview() {
-    HikeItTheme {
-        TrailStatisticSection(
-            trailDetailUi = trailDetailsPreview
-        )
-    }
-}
+//
+//@PreviewLightDark
+//@Composable
+//fun TrailStatisticSectionPreview() {
+//    HikeItTheme {
+//        TrailStatisticSection(
+//            trailDetailUi = trailDetailsPreview
+//        )
+//    }
+//}
